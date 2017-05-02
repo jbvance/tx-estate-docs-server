@@ -30,6 +30,16 @@ userSchema.pre('save', function(next){
   });
 });
 
+// Whatever is at userSchema.methods will be available as a method
+// when you use userSchema
+userSchema.methods.comparePassword = function (candidatePassword, callback) {
+  bcrypt.compare(candidatePassword, this.password, (err, isMatch)=> {
+    if (err) { return callback(err); }
+
+    callback(null, isMatch);
+  });
+};
+
 //Create the model class
 const ModelClass = mongoose.model('user', userSchema);
 
