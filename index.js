@@ -15,7 +15,6 @@ if (app.settings.env === "development"){
   require('dotenv').config();
 }
 
-console.log("DB_CONNECT_STRING", process.env.DB_CONNECT_STRING);
 
 //DB Setup
 mongoose.connect(process.env.DB_CONNECT_STRING);
