@@ -8,8 +8,17 @@ const router = require('./router');
 const mongoose = require('mongoose');
 const cors = require('cors');
 
+
+// Set config variables for development
+if (app.settings.env === "development"){
+  console.log("LOADING DEV ENV CONFIG");
+  require('dotenv').config();
+}
+
+console.log("DB_CONNECT_STRING", process.env.DB_CONNECT_STRING);
+
 //DB Setup
-mongoose.connect('mongodb://localhost:auth/auth');
+mongoose.connect(process.env.DB_CONNECT_STRING);
 
 //App Setup
 app.use(morgan('combined'));
