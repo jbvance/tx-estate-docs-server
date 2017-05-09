@@ -5,13 +5,6 @@ const ExtractJwt = require('passport-jwt').ExtractJwt;
 const LocalStrategy = require('passport-local');
 const config = require('../config');
 
-//var env = process.env.NODE_ENV || "development";
-// Set config variables for development
-//if (env === "development"){
-  //console.log("LOADING DEV ENV CONFIG");
-  //require('dotenv').config();
-//}
-
 
 // Create local Strategy
 // Passport uses 'username' and 'password' by default when it looks in the

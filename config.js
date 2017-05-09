@@ -1,5 +1,3 @@
-let secret;
-
 if (!process.env.NODE_ENV){
   require('dotenv').config();
 }
