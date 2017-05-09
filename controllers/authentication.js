@@ -1,23 +1,26 @@
 const jwt = require('jwt-simple');
 const User = require('../models/user');
+const config = require('../config');
 
-var env = process.env.NODE_ENV || "development";
+console.log("DEV ENVIRONMENT = ",process.env.NODE_ENV);
+
+//var env = process.env.NODE_ENV || "development";
 // Set config variables for development
-if (env === "development"){
-  console.log("LOADING DEV ENV CONFIG");
-  require('dotenv').config();
-}
+//if (env === "development"){
+//  console.log("LOADING DEV ENV CONFIG");
+  //require('dotenv').config();
+//}
 
 function tokenForUser(user) {
   const timestamp = new Date().getTime();
-  return jwt.encode({ sub: user.id, iat: timestamp }, process.env.SECRET);
+  return jwt.encode({ sub: user.id, iat: timestamp }, config.SECRET);
 }
 
 exports.signin = function(req, res, next) {
   // User has already had their email and password auth'd
   // We just need to give them a token
   res.send({ token: tokenForUser(req.user) });
-}
+};
 
 exports.signup = function(req, res, next) {
   const email = req.body.email;
@@ -49,4 +52,4 @@ exports.signup = function(req, res, next) {
       res.json({ token: tokenForUser(user) });
     });
   });
-}
+};

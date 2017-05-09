@@ -3,13 +3,14 @@ const User = require('../models/user');
 const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
 const LocalStrategy = require('passport-local');
+const config = require('../config');
 
-var env = process.env.NODE_ENV || "development";
+//var env = process.env.NODE_ENV || "development";
 // Set config variables for development
-if (env === "development"){
-  console.log("LOADING DEV ENV CONFIG");
-  require('dotenv').config();
-}
+//if (env === "development"){
+  //console.log("LOADING DEV ENV CONFIG");
+  //require('dotenv').config();
+//}
 
 
 // Create local Strategy
@@ -21,7 +22,7 @@ const localLogin = new LocalStrategy(localOptions, (email, password, done) => {
   // email and password; otherwise, call done with false
   User.findOne({ email: email }, (err, user) => {
     if (err) { return done(err); }
-    if (!user) { return done(null, false) }
+    if (!user) { return done(null, false); }
 
     //Compare passwords - is 'password' equal to user.password
     user.comparePassword(password, function(err, isMatch) {
@@ -44,7 +45,7 @@ const localLogin = new LocalStrategy(localOptions, (email, password, done) => {
 const jwtOptions = {
   //look for a header called 'authorization' to find the token
   jwtFromRequest: ExtractJwt.fromHeader('authorization'),
-  secretOrKey: process.env.SECRET
+  secretOrKey: config.SECRET
 };
 
 // Create JWT Strategy
