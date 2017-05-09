@@ -40,7 +40,7 @@ const localLogin = new LocalStrategy(localOptions, (email, password, done) => {
 });
 
 //Set up options for JWT strategy
-console.log( "SECRET", process.env.SECRET);
+//console.log( "SECRET", process.env.SECRET);
 const jwtOptions = {
   //look for a header called 'authorization' to find the token
   jwtFromRequest: ExtractJwt.fromHeader('authorization'),
