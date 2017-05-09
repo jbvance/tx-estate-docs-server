@@ -1,14 +1,21 @@
 const passport = require('passport');
 const User = require('../models/user');
-//const config = require('../config');
 const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
 const LocalStrategy = require('passport-local');
 
+var env = process.env.NODE_ENV || "development";
+// Set config variables for development
+if (env === "development"){
+  console.log("LOADING DEV ENV CONFIG");
+  require('dotenv').config();
+}
+
+
 // Create local Strategy
 // Passport uses 'username' and 'password' by default when it looks in the
 // request body, so let it know we are using email instead of username
-const localOptions = { usernameField: 'email'}
+const localOptions = { usernameField: 'email'};
 const localLogin = new LocalStrategy(localOptions, (email, password, done) => {
   // Verify this user email and password, call done with the correct
   // email and password; otherwise, call done with false
@@ -33,6 +40,7 @@ const localLogin = new LocalStrategy(localOptions, (email, password, done) => {
 });
 
 //Set up options for JWT strategy
+console.log( "SECRET", process.env.SECRET);
 const jwtOptions = {
   //look for a header called 'authorization' to find the token
   jwtFromRequest: ExtractJwt.fromHeader('authorization'),
