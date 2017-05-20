@@ -3,13 +3,13 @@ const Schema = mongoose.Schema;
 
 //Define the model
 const userProfileSchema = new Schema({
-  firstName: { type: String, required: true },
-  lastName: { type: String, required: true },
+  firstName: { type: String, required: 'First Name is required' },
+  lastName: { type: String, required: 'Last Name is required' },
   middleName: { type: String },
-  address: {type: String, required: true },
-  city: {type: String, required: true },
-  state: {type: String, required: true },
-  zip: {type: String, required: true },
+  address: {type: String, required: 'Address is required' },
+  city: {type: String, required: 'City is required' },
+  state: {type: String, required: 'State is required' },
+  zip: {type: String, required: 'Zip Code is required' },
 });
 
 //On Save Hook, encrypt password
