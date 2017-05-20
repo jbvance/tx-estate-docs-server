@@ -8,8 +8,13 @@ const userProfileSchema = new Schema({
   middleName: { type: String },
   address: {type: String, required: 'Address is required' },
   city: {type: String, required: 'City is required' },
-  state: {type: String, required: 'State is required' },
+  state_residence: {type: String, required: 'State is required' },
   zip: {type: String, required: 'Zip Code is required' },
+  owner: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'user',
+    required: 'You must supply an author for a review'
+  },
 });
 
 //On Save Hook, encrypt password
