@@ -40,7 +40,7 @@ exports.createOrEditProfile = function(req, res, next) {
         console.log("New User Profile Created!");
         return res.json({ newUser, message: 'New User Profile created!' });
       });
-    } 
+    } else {
 
     // If we get here, save the existing profile
     existingUser.firstName = firstName;
@@ -60,7 +60,7 @@ exports.createOrEditProfile = function(req, res, next) {
       return res.json({ message: 'User profile updated!' });
     });
 
-
+    }
 
   });
 };
