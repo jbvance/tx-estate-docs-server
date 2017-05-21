@@ -64,3 +64,14 @@ exports.createOrEditProfile = function(req, res, next) {
 
   });
 };
+
+exports.getProfile = function(req, res, next){
+  UserProfile.findOne({ owner: req.user._id }, function(err, existingUser) {
+    if (err) { return next(err); }
+    if (existingUser) {
+        return res.json( { user: existingUser });
+    } else  {
+        return res.status(201).send({ message: 'No User Profile Found.'});
+    }
+  });
+};

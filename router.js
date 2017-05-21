@@ -16,5 +16,6 @@ module.exports = (app) =>  {
   app.post('/signup', Authentication.signup);
 
   app.post('/profile', requireAuth, UserProfile.createOrEditProfile);
+  app.get('/profile', requireAuth, UserProfile.getProfile);
   app.post('/profile/:id', requireAuth, UserProfile.createOrEditProfile);
 };
