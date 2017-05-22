@@ -11,10 +11,14 @@ const userProfileSchema = new Schema({
   state_residence: {type: String, required: 'State is required' },
   zip: {type: String, required: 'Zip Code is required' },
   owner: {
-    type: mongoose.Schema.ObjectId,
+    type: Schema.ObjectId,
     ref: 'user',
-    required: 'You must supply an author for a review'
+    required: 'You must supply an owner for the profile'
   },
+  dpoas: [{
+      type: Schema.Types.ObjectId,
+            ref: 'dpoa'
+  }]
 });
 
 //On Save Hook, encrypt password

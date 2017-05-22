@@ -1,5 +1,6 @@
 const Authentication = require ('./controllers/authentication');
 const UserProfile = require('./controllers/user_profile');
+const Dpoa = require('./controllers/dpoaController');
 const  passportService = require('./services/passport');
 const passport = require('passport');
 
@@ -15,7 +16,11 @@ module.exports = (app) =>  {
   app.post('/signin', requireSignin, Authentication.signin);
   app.post('/signup', Authentication.signup);
 
+  //Profile Routes
   app.post('/profile', requireAuth, UserProfile.createOrEditProfile);
   app.get('/profile', requireAuth, UserProfile.getProfile);
   app.post('/profile/:id', requireAuth, UserProfile.createOrEditProfile);
+
+  // Durable Power of Attorney Routes
+  app.post('/dpoa', requireAuth, Dpoa.createOrUpdateDpoa);
 };
