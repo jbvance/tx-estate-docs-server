@@ -16,8 +16,12 @@ const userProfileSchema = new Schema({
     required: 'You must supply an owner for the profile'
   },
   dpoas: [{
-      type: Schema.Types.ObjectId,
-            ref: 'dpoa'
+    type: Schema.Types.ObjectId,
+    ref: 'dpoa'
+  }],
+  mpoas: [{
+    type: Schema.Types.ObjectId,
+    ref: 'mpoa'
   }]
 });
 

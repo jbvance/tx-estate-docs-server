@@ -1,6 +1,7 @@
 const Authentication = require ('./controllers/authentication');
 const UserProfile = require('./controllers/user_profile');
 const Dpoa = require('./controllers/dpoaController');
+const Mpoa = require('./controllers/mpoaController');
 const  passportService = require('./services/passport');
 const passport = require('passport');
 
@@ -23,4 +24,7 @@ module.exports = (app) =>  {
 
   // Durable Power of Attorney Routes
   app.post('/dpoa', requireAuth, Dpoa.createOrUpdateDpoa);
+
+  // Medical Power of Attorney Routes
+  app.post('/mpoa', requireAuth, Mpoa.createOrUpdateMpoa);
 };
