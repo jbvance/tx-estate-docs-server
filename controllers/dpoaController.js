@@ -11,22 +11,29 @@ exports.createOrUpdateDpoa = function (req, res, next) {
       // otherwise, add the new Dpoa
       if (profile.dpoas.length) {
           console.log("UPDATING DPOA>>>>>>>>>>>>>>>>>>>>>>");
-         Dpoa.findByIdAndUpdate(
-           profile.dpoas[profile.dpoas.length - 1],
-           {
-             agents,
-             effectiveNow
-           },
-           { new: true }
-         )
+         Dpoa.findById(profile.dpoas[profile.dpoas.length - 1])
           .then(profileDpoa => {
-            res.status(201).json(profileDpoa);
-            return;
+            profileDpoa.agents = agents;
+            profileDpoa.effectiveNow = effectiveNow;
+            profileDpoa.validate(function(err) {
+              if (err) {
+                console.log('*************DPOA VALIDATION FAILED*********', err);
+                res.status(422).json({error: err.message});
+                return;
+              } else {
+                profileDpoa.save()
+                  .then (newProfile => {
+                    res.status(200).json(newProfile);
+                    return;
+                  });
+              }
+            });
           })
           .catch(err => {
             console.log("ERROR", err);
             next(err);
           });
+
 
       } else {
 
