@@ -37,3 +37,18 @@ exports.createOrUpdateDpoa = function (req, res, next) {
     })
     .catch(err => next(err));
 };
+
+exports.getDpoa = function(req, res, next){
+  UserProfile.findOne({ owner: req.user._id })
+    .populate('dpoas')
+    .exec(function(err, existingUser) {
+      if (err) { return next(err); }
+      if (existingUser) {
+          res.json( { dpoa: existingUser.dpoas });
+          return;
+      } else  {
+          res.status(500).send({ message: 'No User Profile Found.'});
+          return;
+      }
+    });
+};
