@@ -1,29 +1,10 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+require('./agent');
+const agentSchema = mongoose.model('agent').schema;
 
 const DpoaSchema = new Schema({
-  agents: [{
-    fullName: {
-      type: String,
-      required: 'Agent name is required'
-    },
-    address: {
-      type: String,
-      required: 'Agent address is required'
-    },
-    city: {
-      type: String,
-      required: 'Agent city is required'
-    },
-    state_residence: {
-      type: String,
-      required: 'Agent state is required'
-    },
-    zip: {
-      type: String,
-      required: 'Agent zip is required'
-    }
-  }],
+  agents: [ agentSchema ],
   effectiveNow: {
     type: Boolean,
     required: "Effective Time is required"

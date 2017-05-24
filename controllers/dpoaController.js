@@ -10,6 +10,7 @@ exports.createOrUpdateDpoa = function (req, res, next) {
       // If profle already has a Dpoa, update the existing one;
       // otherwise, add the new Dpoa
       if (profile.dpoas.length) {
+          console.log("UPDATING DPOA>>>>>>>>>>>>>>>>>>>>>>");
          Dpoa.findByIdAndUpdate(
            profile.dpoas[profile.dpoas.length - 1],
            {
@@ -19,19 +20,40 @@ exports.createOrUpdateDpoa = function (req, res, next) {
            { new: true }
          )
           .then(profileDpoa => {
-            return res.json(profileDpoa);
+            res.status(201).json(profileDpoa);
+            return;
           })
-          .catch(err => next(err));
+          .catch(err => {
+            console.log("ERROR", err);
+            next(err);
+          });
 
       } else {
+
           const dpoa = new Dpoa({agents, effectiveNow});
+          console.log("ADDING NEW DPOA>>>>>>>>>>>>>>>>>>", agents);
           profile.dpoas.push(dpoa);
-          Promise.all([profile.save(), dpoa.save()])
+          dpoa.save()
             .then(() => {
-              console.log("DONE");
-              return res.json(profile);
-            })
-            .catch (err => next (err));
+              profile.save()
+                .then(() => {
+                    res.json(profile);
+                    return;
+                  }
+                )
+                .catch(err => {
+                  console.log('ERROR SAVING PROFILE>>>>>>>>>>');
+                  res.status(422).json({error: err});
+                  return;
+                });
+              }
+            )
+          .catch(err => {
+            console.log("ERROR SAVING DPOA >>>>>>>>>>>>>>>>>>>>>");
+            res.status(422).json({error: err});
+            return;
+          });
+
       }
 
     })
