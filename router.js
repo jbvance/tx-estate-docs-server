@@ -28,4 +28,5 @@ module.exports = (app) =>  {
 
   // Medical Power of Attorney Routes
   app.post('/mpoa', requireAuth, Mpoa.createOrUpdateMpoa);
+  app.get('/mpoa', requireAuth, Mpoa.getMpoa);
 };
