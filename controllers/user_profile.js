@@ -8,9 +8,9 @@ exports.createOrEditProfile = function(req, res, next) {
   const owner = req.params.id;
   console.log("OWNER", owner);
 
-  if (!firstName || !lastName || !address || !city || !state_residence || !zip || !owner) {
-    return res.status(422).send({ error: 'You must provide all required fields'});
-  }
+  //if (!firstName || !lastName || !address || !city || !state_residence || !zip || !owner) {
+    //return res.status(422).send({ error: 'You must provide all required fields'});
+  //}
 
   // See if a user with the given email exists
   const userProfile = UserProfile.findOne({ owner: new ObjectId(owner) }, function(err, existingUser) {
@@ -38,7 +38,8 @@ exports.createOrEditProfile = function(req, res, next) {
 
         // Repond to request indicating the user was created
         console.log("New User Profile Created!");
-        return res.json({ newUser, message: 'New User Profile created!' });
+        res.status(201).json({ newUser, message: 'New User Profile created!' });
+        return;
       });
     } else {
 
@@ -52,13 +53,16 @@ exports.createOrEditProfile = function(req, res, next) {
     existingUser.zip = zip;
     existingUser.owner = owner;
 
-    existingUser.save(function(err) {
-      if (err) { return next(err); }
-
-      // Repond to request indicating the user was created
-      console.log("USER PROFILE UPDATED");
-      return res.json({ message: 'User profile updated!' });
-    });
+    existingUser.save()
+      .then(savedUser => {
+        res.status(201).json({savedUser});
+        return;
+      })
+      .catch(err => {
+          console.log("*************ERROR SAVING PROFILE***********", err)
+          res.status(422).json({error: err.errors});
+          return;
+      });
 
     }
 
