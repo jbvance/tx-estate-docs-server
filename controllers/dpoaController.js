@@ -15,19 +15,15 @@ exports.createOrUpdateDpoa = function (req, res, next) {
           .then(profileDpoa => {
             profileDpoa.agents = agents;
             profileDpoa.effectiveNow = effectiveNow;
-            profileDpoa.validate(function(err) {
-              if (err) {
-                console.log('*************DPOA VALIDATION FAILED*********', err);
-                res.status(422).json({error: err.errors});
+            profileDpoa.save()
+              .then(newProfile => {
+                res.status(200).json(newProfile);
                 return;
-              } else {
-                profileDpoa.save()
-                  .then (newProfile => {
-                    res.status(200).json(newProfile);
-                    return;
-                  });
-              }
-            });
+              })
+              .catch(err => {
+                console.log('**************DPOA VALIDATION FAILED**************', err);
+                res.status(422).json({ error: err.errors });
+              });
           })
           .catch(err => {
             console.log("ERROR OCCURRED IN SAVE>>>>>>>>>>>>>>>>>>>>", err);

@@ -3,13 +3,13 @@ const Schema = mongoose.Schema;
 
 //Define the model
 const userProfileSchema = new Schema({
-  firstName: { type: String, required: 'First Name is required' },
-  lastName: { type: String, required: 'Last Name is required' },
-  middleName: { type: String },
-  address: {type: String, required: 'Address is required' },
-  city: {type: String, required: 'City is required' },
-  state_residence: {type: String, required: 'State is required' },
-  zip: {type: String, required: 'Zip Code is required' },
+  firstName: { type: String, required: 'First Name is required', trim: true },
+  lastName: { type: String, required: 'Last Name is required', trim: true },
+  middleName: { type: String, trim: true },
+  address: {type: String, required: 'Address is required', trim: true },
+  city: {type: String, required: 'City is required', trim: true },
+  state_residence: {type: String, required: 'State is required', trim: true },
+  zip: {type: String, required: 'Zip Code is required', trim: true },
   owner: {
     type: Schema.ObjectId,
     ref: 'user',
