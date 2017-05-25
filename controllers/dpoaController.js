@@ -18,7 +18,7 @@ exports.createOrUpdateDpoa = function (req, res, next) {
             profileDpoa.validate(function(err) {
               if (err) {
                 console.log('*************DPOA VALIDATION FAILED*********', err);
-                res.status(422).json({error: err.message});
+                res.status(422).json({error: err.errors});
                 return;
               } else {
                 profileDpoa.save()
@@ -30,7 +30,7 @@ exports.createOrUpdateDpoa = function (req, res, next) {
             });
           })
           .catch(err => {
-            console.log("ERROR", err);
+            console.log("ERROR OCCURRED IN SAVE>>>>>>>>>>>>>>>>>>>>", err);
             next(err);
           });
 
@@ -41,26 +41,17 @@ exports.createOrUpdateDpoa = function (req, res, next) {
           console.log("ADDING NEW DPOA>>>>>>>>>>>>>>>>>>", agents);
           profile.dpoas.push(dpoa);
           dpoa.save()
+            .then(() => profile.save())
             .then(() => {
-              profile.save()
-                .then(() => {
-                    res.json(profile);
-                    return;
-                  }
-                )
-                .catch(err => {
-                  console.log('ERROR SAVING PROFILE>>>>>>>>>>');
-                  res.status(422).json({error: err});
+                  res.json(profile);
                   return;
-                });
-              }
+                }
             )
-          .catch(err => {
-            console.log("ERROR SAVING DPOA >>>>>>>>>>>>>>>>>>>>>");
-            res.status(422).json({error: err});
-            return;
-          });
-
+            .catch(err => {
+              console.log('ERROR SAVING PROFILE>>>>>>>>>>');
+              res.status(422).json({error: err});
+              return;
+            });
       }
 
     })
