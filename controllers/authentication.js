@@ -1,6 +1,8 @@
 const jwt = require('jwt-simple');
 const User = require('../models/user');
 const config = require('../config');
+const mail = require('../handlers/mail');
+const crypto = require('crypto');
 
 function tokenForUser(user) {
   const timestamp = new Date().getTime();
@@ -44,3 +46,35 @@ exports.signup = function(req, res, next) {
     });
   });
 };
+
+exports.forgot = (req, res) => {
+  console.log("******************GOT HERE*******************");
+  // See if a user exists with that email
+  User.findOne({ email: req.body.email })
+    .then(user => {
+      if (!user) {
+        res.status(400).json({error: 'No account with that email exists'})
+        return;
+      }
+      console.log("******************GOT HERE*******************");
+      // Set reset tokens and expiration on their account
+      user.resetPasswordToken = crypto.randomBytes(20).toString('hex');
+      user.resetPasswordExpires = Date.now() + 3600000; // 1 hour from now'
+      user.save()
+        .then(user => {
+          const resetURL = `http://${req.headers.host}/account/reset/${user.resetPasswordToken}`;
+          mail.send({
+            user,
+            subject: 'Password Reset',
+            resetURL,
+            filename: 'password-reset'
+          }, (err, info) => {
+            console.log ('success', 'You have been emailed a password rest link.');
+          });
+        });
+    })
+    .catch(err => {
+      res.status(400).json(err);
+      return;
+    });
+  };

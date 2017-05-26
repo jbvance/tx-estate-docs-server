@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 require('./agent');
 const agentSchema = mongoose.model('agent').schema;
+mongoose.Promise = global.Promise;
 
 const MpoaSchema = new Schema({
   agents: [ agentSchema ],
