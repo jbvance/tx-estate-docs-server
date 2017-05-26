@@ -15,17 +15,20 @@ const transporter = nodemailer.createTransport({
 
 const generateHTML = (filename, options = {}) => {
   return  new Promise((resolve, reject) => {
-    const html = pug.renderFile(`${__dirname}/../views/email/${filename}.pug`, options);
-    const inlined = juice(html);
-    resolve(inlined);
+    try {
+      const html = pug.renderFile(`${__dirname}/../views/email/${filename}.pug`, options);
+      const inlined = juice(html);
+      resolve(inlined);
+    }
+    catch(err) {
+      reject(err);
+    }
   });
 };
 
 exports.send = (options, callback) => {
   generateHTML(options.filename, options)
     .then((html) => {
-      console.log("HTML", html);
-      //const html = generateHTML(options.filename, options);
       const text = htmlToText.fromString(html);
       const mailOptions = {
         from: 'Jason Vance <noreply@txestatedocs.com>',
@@ -44,5 +47,8 @@ exports.send = (options, callback) => {
         console.log(`Message ${info.messageId} sent: ${info.response}`);
         callback(null, { info: `Message ${info.messageId} sent: ${info.response}`});
       });
+    })
+    .catch(err => {
+      callback(err, null);
     });
 };
