@@ -26,29 +26,34 @@ const generateHTML = (filename, options = {}) => {
   });
 };
 
+const sendEmail = ((html, options) => {
+  return new Promise((resolve, rejct) => {
+    const text = htmlToText.fromString(html);
+    const mailOptions = {
+      from: 'Jason Vance <noreply@txestatedocs.com>',
+      to: options.user.email,
+      subject: options.subject,
+      html,
+      text,
+    };
+    //send mail with defined transport object
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error){
+        console.log(error);
+        reject(error);
+        return;
+      }
+      console.log(`Message ${info.messageId} sent: ${info.response}`);
+      resolve ({ info: `Message ${info.messageId} sent: ${info.response}`});
+    });
+  });
+});
+
 exports.send = (options, callback) => {
   generateHTML(options.filename, options)
     .then((html) => {
-      const text = htmlToText.fromString(html);
-      const mailOptions = {
-        from: 'Jason Vance <noreply@txestatedocs.com>',
-        to: options.user.email,
-        subject: options.subject,
-        html,
-        text,
-      };
-      //send mail with defined transport object
-      transporter.sendMail(mailOptions, (error, info) => {
-        if (error){
-          console.log(error);
-          callback(error, null);
-          return;
-        }
-        console.log(`Message ${info.messageId} sent: ${info.response}`);
-        callback(null, { info: `Message ${info.messageId} sent: ${info.response}`});
-      });
+      return sendEmail(html, options);
     })
-    .catch(err => {
-      callback(err, null);
-    });
+    .then(result => callback(null, result))
+    .catch (err => callback(err, null));
 };
