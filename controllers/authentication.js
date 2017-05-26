@@ -69,7 +69,7 @@ exports.forgot = (req, res) => {
             resetURL,
             filename: 'password-reset'
           }, (err, info) => {
-            console.log ('success', 'You have been emailed a password rest link.');
+            res.status(200).json({ message: 'You have been emailed a password rest link.'});
           });
         });
     })

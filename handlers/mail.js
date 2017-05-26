@@ -14,27 +14,35 @@ const transporter = nodemailer.createTransport({
 });
 
 const generateHTML = (filename, options = {}) => {
-  const html = pug.renderFile(`${__dirname}/../views/email/${filename}.pug`, options);
-  const inlined = juice(html);
-  return inlined;
+  return  new Promise((resolve, reject) => {
+    const html = pug.renderFile(`${__dirname}/../views/email/${filename}.pug`, options);
+    const inlined = juice(html);
+    resolve(inlined);
+  });
 };
 
 exports.send = (options, callback) => {
-  const mailOptions = {
-    from: 'Jason Vance <noreply@txestatedocs.com>',
-    to: 'jbvance@gmail.com', //options.user.email,
-    subject: 'TX Estate Docs Email', //options.subject,
-    html: '<h1>Hello World 1</h1>',
-    text: 'Hellow World!', //text,
-  };
-  //send mail with defined transport object
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error){
-      console.log(error);
-      callback(error, null);
-      return;
-    }
-    console.log(`Message ${info.messageId} sent: ${info.response}`);
-    callback(null, { info: `Message ${info.messageId} sent: ${info.response}`});
-  });
+  generateHTML(options.filename, options)
+    .then((html) => {
+      console.log("HTML", html);
+      //const html = generateHTML(options.filename, options);
+      const text = htmlToText.fromString(html);
+      const mailOptions = {
+        from: 'Jason Vance <noreply@txestatedocs.com>',
+        to: options.user.email,
+        subject: options.subject,
+        html,
+        text,
+      };
+      //send mail with defined transport object
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error){
+          console.log(error);
+          callback(error, null);
+          return;
+        }
+        console.log(`Message ${info.messageId} sent: ${info.response}`);
+        callback(null, { info: `Message ${info.messageId} sent: ${info.response}`});
+      });
+    });
 };
